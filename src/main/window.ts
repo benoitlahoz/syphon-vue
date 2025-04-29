@@ -11,7 +11,7 @@ export const createWindow = (route: string, width = 900, height = 600) => {
     minHeight: height,
     show: false,
     webPreferences: {
-      contextIsolation: true, // Doesn't work with `false` either.
+      contextIsolation: false, // Doesn't work with `false` either.
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       backgroundThrottling: false,
@@ -21,11 +21,12 @@ export const createWindow = (route: string, width = 900, height = 600) => {
   });
 
   win.webContents.setWindowOpenHandler(({ url, frameName, features }) => {
-    if (frameName.startsWith('syphon_')) {
+    if (frameName.startsWith('syphon_server_')) {
       console.log(url, features);
 
       return {
         action: 'allow',
+        /*
         overrideBrowserWindowOptions: {
           // parent: win,
           show: false,
@@ -37,19 +38,18 @@ export const createWindow = (route: string, width = 900, height = 600) => {
             preload: join(__dirname, '../preload/index.js'),
           },
         },
-        /*
+        */
         createWindow(options) {
           const newOptions = {
             ...options,
             // parent: win,
             show: false,
-            frame: false,
-            titleBarStyle: 'hidden' as const,
             webPreferences: {
               ...options.webPreferences,
               offscreen: {
                 useSharedTexture: true,
               },
+              contextIsolation: true, // Doesn't work with `false` either.
               nodeIntegration: false,
               nodeIntegrationInWorker: true,
               preload: join(__dirname, '../preload/index.js'),
@@ -79,7 +79,6 @@ export const createWindow = (route: string, width = 900, height = 600) => {
 
           return browserWindow.webContents;
         },
-        */
       };
     }
 
@@ -102,6 +101,7 @@ export const createWindow = (route: string, width = 900, height = 600) => {
         texture.release();
       }
     };
+
     subwindow.webContents.on('paint', handlePaint);
   });
 

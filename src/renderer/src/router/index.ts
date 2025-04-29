@@ -7,7 +7,7 @@ const routes = [
     component: () => import('../views/MainView.vue'),
   },
   {
-    path: '/syphon/:id',
+    path: '/syphon-server/:id',
     component: () => import('../views/SyphonView.vue'),
   },
 ];

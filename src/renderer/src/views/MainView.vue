@@ -16,8 +16,8 @@ const onCreateServer = () => {
   const index = serverCanvases.value.length;
 
   const win: Window = window.open(
-    `/#/syphon/${index}`,
-    `syphon_${index}`,
+    `/#/syphon-server/${index}`,
+    `syphon_server_${index}`,
     'width=800,height=600',
   ) as Window;
 
@@ -34,7 +34,7 @@ const onCreateServer = () => {
       background: 'black',
       width: '320px',
       height: '240px',
-      marginTop: '0.5rem',
+      marginTop: index > 0 ? '0.5rem' : '0',
     },
     win,
   });
@@ -62,6 +62,14 @@ const drawFrame = (timestamp: number) => {
     if (ctx) {
       ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
       ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#003300';
+      ctx.font = 'bold 30px sans-serif';
+
+      const str = `syphon_server_${index}`;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+      ctx.fillText(str, canvas.width / 2, canvas.height / 2);
 
       if (server.win) {
         const windowCanvas = server.win.document.getElementsByTagName('canvas');
@@ -94,7 +102,7 @@ const drawFrame = (timestamp: number) => {
         @click="onCreateServer"
       ) Create Server
     div(
-      style="width: 100%; flex-grow: 1; display: flex; flex-direction: column; align-items: center; overflow-y: scroll; margin-bottom: 0.5rem;"
+      style="width: 100%; flex-grow: 1; display: flex; flex-direction: column; align-items: center; overflow-y: scroll; padding-bottom: 0.5rem;"
     )
       canvas(
         v-for="(canvasDefinition, index) in serverCanvases",
